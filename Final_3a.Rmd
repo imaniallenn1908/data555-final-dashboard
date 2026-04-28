@@ -15,7 +15,7 @@ library(readr)
 library(readxl)
 
 #shiny app #1
-main.df = readRDS("/WASHFIT_App/main.df.rds")
+main.df = readRDS("main.df.rds")
 
 ui = fluidPage(
   titlePanel("WASHFIT Scores in Diamaguène Sicap Mbao, Dakar, Senegal"),
@@ -110,7 +110,7 @@ library(ggplot2)
 library(plotly)
 
 #shiny app #2
-secondary.df = readRDS("/WASHFIT_App/secondary.df.rds")
+secondary.df = readRDS("WASHFIT_App/secondary.df.rds")
 
 ui = fluidPage(
   titlePanel("Status of WASHFIT Indicators"),
