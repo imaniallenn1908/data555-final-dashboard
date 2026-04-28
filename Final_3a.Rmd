@@ -69,7 +69,12 @@ ui = fluidPage(
       
       leafletOutput("map", height = 600),
       
-      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments.")
+      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments."),
+      helpText(
+  tags$a("Source Code (GitHub Repository)", 
+         href = "https://github.com/imaniallenn1908/data555-final-dashboard",
+         target = "_blank")
+)
     )
     )
   ),
@@ -150,7 +155,12 @@ ui = fluidPage(
       helpText("Click a facility on the map to view its WASHFIT profile"),
       plotlyOutput("stacked_bar"),
       leafletOutput("map", height = 600),
-      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments.")
+      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments."),
+      helpText(
+  tags$a("Source Code (GitHub Repository)", 
+         href = "https://github.com/imaniallenn1908/data555-final-dashboard",
+         target = "_blank")
+)
       )
       )
     ),
