@@ -1,0 +1,233 @@
+---
+title: 'DATA 555: Final 3a Mockup'
+author: "Imani Allen"
+date: "2026-03-20"
+output:
+  pdf_document: default
+  html_document: default
+---
+```{r}
+library(shiny)
+library(leaflet)
+library(dplyr)
+library(readr)
+library(readxl)
+
+#load data
+loc.df = read_excel("~/Desktop/Thesis/main_loc_file.xlsx")
+wash.df = read_excel("~/Desktop/Thesis/wash_scores.xlsx")
+indicator.df = read_excel("~/Desktop/Thesis/percentage_indicators.xlsx")
+
+#join datasets by ID and save
+main.df = left_join(loc.df, wash.df, by = "ID") %>%
+  select(-Name.y) %>%
+  rename(Name = Name.x)
+
+saveRDS(main.df,"~/Desktop/Thesis/main.df.rds")
+
+secondary.df = left_join(loc.df, indicator.df, by = "ID")
+saveRDS(secondary.df, "~/Desktop/Thesis/secondary.df.rds")
+```
+
+```{r}
+library(shiny)
+library(leaflet)
+library(dplyr)
+library(readr)
+library(readxl)
+
+#shiny app #1
+main.df = readRDS("~/Desktop/Thesis/main.df.rds")
+
+ui = fluidPage(
+  titlePanel("WASHFIT Scores in Diamaguène Sicap Mbao, Dakar, Senegal"),
+  
+  tabsetPanel(
+    tabPanel(
+      "Dashboard",
+      sidebarLayout(
+        sidebarPanel(
+      selectInput(
+        "Indicator",
+        "Please Select An Indicator",
+        choices = unique(main_df$Indicator)
+      ),
+      
+      sliderInput(
+        "Threshold",
+        "WASHFIT Score Threshold",
+        min = 0,
+        max = 30,
+        value = 15
+      ),
+      
+      helpText("Health facilities scoring above the selected score will appear with a green circle, while facilities with red circles scored below the indicated threshold."),
+    ),
+    
+    mainPanel(
+      helpText("Click on a circle to display to the health facility's name, selected indicator and score, and the Joint Monitoring Programme (JMP) level. JMP levels include: No Service(s), Limited Service(s), or Basic Service(s)"),
+      
+      leafletOutput("map", height = 600),
+      
+      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments.")
+    )
+    )
+  ),
+  tabPanel(
+      "Dataset Description",
+      
+      fluidPage(
+        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguène Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
+      )
+    )
+  )
+)
+
+server = function(input, output) {
+  new_df = reactive({
+    main.df %>%
+      filter(Indicator == input$Indicator)
+  })
+  
+  output$map = renderLeaflet({
+    df = new_df()
+    
+    leaflet(df) %>%
+      addTiles() %>%
+      
+      addCircleMarkers(
+        lng = ~Longitude,
+        lat = ~Latitude,
+        radius = 60,
+        
+        color = ~ifelse(Score >= input$Threshold, "green", "red"),
+        
+        popup = ~paste0(
+          "<b>", Name, "</b><br>",
+          "Indicator: ", Indicator, "<br>",
+          "Score: ", Score, "<br>",
+          "JMP Level: ", JMP
+        ),
+        
+        label = ~Name
+      )
+  })
+}
+shinyApp(ui, server)
+```
+
+```{r}
+library(shiny)
+library(leaflet)
+library(dplyr)
+library(readr)
+library(readxl)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+
+#shiny app #2
+secondary.df = readRDS("~/Desktop/Thesis/secondary.df.rds")
+
+ui = fluidPage(
+  titlePanel("Status of WASHFIT Indicators"),
+  
+  tabsetPanel(
+    tabPanel(
+      "Dashboard",
+    sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        "Domain",
+        "Select Domain",
+        choices = unique(secondary.df$Domain)
+      ),
+      
+      helpText("The following graph shows a percentage breakdown of the selected health facility's WASHFIT profile. The percentages represent the proportion of WASHFIT indicators within each status category (completely met, partially met, or not met). The green bars are for WASHFIT indicators that were completely met, yellow bars are for partially met indicators, while red bars are for indicators that are not met. Percentages of each indicator appear when you hover over the bar."),
+    ),
+    
+    mainPanel(
+      helpText("Click a facility on the map to view its WASHFIT profile"),
+      plotlyOutput("stacked_bar"),
+      leafletOutput("map", height = 600),
+      helpText("This dashboard supports monitoring of WASHFIT performance across health facilities, helping identify service gaps and prioritize targeted improvements in water, sanitation, and hygiene infrastructure. The findings provide actionable insights for strengthening health system readiness and improving patient care environments.")
+      )
+      )
+    ),
+    tabPanel(
+      "Dataset Description",
+      
+      fluidPage(
+        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguène Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
+      )
+    )
+  )
+)
+
+server = function(input, output) {
+  base_df = reactive({
+  secondary.df %>%
+    filter(Domain == input$Domain)
+})
+  
+  output$map = renderLeaflet({
+    df = base_df()
+    
+    leaflet(df) %>%
+      addTiles() %>%
+      addAwesomeMarkers(
+        lng = ~Longitude,
+        lat = ~Latitude,
+        layerId = ~ID,
+        label = ~Name
+      )
+})
+  selected_id = reactive({
+    input$map_marker_click$id
+  })
+  
+  filtered_stacked = reactive({
+  
+  df = base_df()
+  
+  if (!is.null(selected_id())) {
+    df = df %>% filter(ID == selected_id())
+  }
+  
+  df %>%
+    select(Status, Percent)
+})
+  
+  output$stacked_bar = renderPlotly({
+    p = ggplot(filtered_stacked(), 
+              aes(x = Status, y = Percent, fill = Status,
+                  text = paste0("Status: ", Status,
+                                "<br>Percent: ", round(Percent, 1), "%"))) +
+    
+    geom_bar(stat = "identity", position = "dodge") +
+    
+    scale_fill_manual(values = c(
+      "Doesn't Meet" = "red",
+      "Partially Meets" = "gold",
+      "Meets Totally" = "green"
+    )) +
+    
+    labs(
+      title = ifelse(
+        is.null(selected_id()),
+        "WASHFIT Status Distribution",
+        paste("Facility ID:", selected_id())
+      ),
+      x = "Status",
+      y = "Percent"
+    ) +
+    
+    theme_minimal()
+
+  ggplotly(p, tooltip = "text")
+})
+}
+
+shinyApp(ui, server)
+```
+
