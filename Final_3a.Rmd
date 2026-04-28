@@ -3,7 +3,6 @@ title: 'DATA 555: Final 3a Mockup'
 author: "Imani Allen"
 date: "2026-03-20"
 output:
-  pdf_document: default
   html_document: default
 ---
 
