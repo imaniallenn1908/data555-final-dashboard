@@ -18,7 +18,7 @@ library(readxl)
 main.df = readRDS("main.df.rds")
 
 ui = fluidPage(
-  titlePanel("WASHFIT Scores in Diamaguène Sicap Mbao, Dakar, Senegal"),
+  titlePanel("WASHFIT Scores in Diamaguene Sicap Mbao, Dakar, Senegal"),
   
   tabsetPanel(
     tabPanel(
@@ -60,7 +60,7 @@ ui = fluidPage(
       "Dataset Description",
       
       fluidPage(
-        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguène Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
+        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguene Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
       )
     )
   )
@@ -144,7 +144,7 @@ ui = fluidPage(
       "Dataset Description",
       
       fluidPage(
-        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguène Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
+        p("The dataset is derived from WASHFIT (Water, Sanitation, Hygiene, and Health Facility Improvement Tool) assessments conducted in health facilities in Diamaguene Sicap Mbao, Dakar, Senegal. The data are confidential and were used for academic research purposes only. Data were collected through structured facility-based assessments using the WHO WASHFIT tool. The study population includes primary health facilities in the district. Data were collected between May-July 2025.")
       )
     )
   )
