@@ -97,9 +97,7 @@ server = function(input, output) {
   })
 }
 shinyApp(ui, server)
-```
 
-```{r}
 library(shiny)
 library(leaflet)
 library(dplyr)
@@ -110,7 +108,7 @@ library(ggplot2)
 library(plotly)
 
 #shiny app #2
-secondary.df = readRDS("WASHFIT_App/secondary.df.rds")
+secondary.df = readRDS("secondary.df.rds")
 
 ui = fluidPage(
   titlePanel("Status of WASHFIT Indicators"),
