@@ -1,6 +1,6 @@
 # WASHFIT Dashboard Titles 
-Dashboard 1: WASHFIT Scores in Diamaguène Sicap Mbao, Dakar, Senegal
-Dashboard 2: Status of WASHFIT Indicators
+ - Dashboard 1: WASHFIT Scores in Diamaguène Sicap Mbao, Dakar, Senegal
+ - Dashboard 2: Status of WASHFIT Indicators
 
 ## Overview
 This project presents an interactive Shiny dashboard analyzing WASHFIT (Water, 
